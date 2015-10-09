@@ -1,8 +1,6 @@
 //bitcoin.js
 
-var bitcoincount = 0;
 var bitcoinID = 0;
-
 
 Bitcoin.prototype = Object.create(Phaser.Sprite.prototype);
 Bitcoin.prototype.constructor = Bitcoin;
@@ -22,7 +20,7 @@ function Bitcoin(game, x, y, value) {
 }
 
 function pickUpCoin() {
-	bitcoincount += this.value;
+	player.cash += this.value;
 	console.log("bitcoin collected"+" " +this.value);
 	this.destroy();
 }

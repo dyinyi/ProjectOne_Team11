@@ -51,6 +51,7 @@ function Player(game, x, y, P_skin) { //, P_weapon) {
         laser: game.input.keyboard.addKey(Phaser.Keyboard.C),
     }
     this.weapon = 'bullets';
+    this.cash = 0;
 }
 
 
@@ -111,6 +112,8 @@ function enemyVsPlayer(){
 */
 
 function updatePlayer(){
+
+    console.log(player.cash);
 
     if (player.health <= 0) {
         player.kill();
