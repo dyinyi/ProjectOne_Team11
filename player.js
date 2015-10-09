@@ -141,15 +141,16 @@ function updatePlayer(){
 
     // Checks for user input (click) for weapons fire
     // Fires weapon based on selection (Z,X,C)
-    if (game.input.activePointer.isDown) {
-        //if (this.weapon === 'bullets') {
+    console.log(player.weapon);
+
+    if (game.input.activePointer.isDown && player.alive) {
+        if (player.weapon === 'bullets') {
             singleFire(bullets);
-        /*} else if (this.weapon === 'rockets') {
+        } else if (player.weapon === 'rockets') {
             singleFire(rockets);
-       // } else if (this.weapon === 'laser') {
+       } else if (player.weapon === 'laser') {
             singleFire(lasers);
         }
-        */
     }
 /*
     if (specials.special1.isDown) {
@@ -164,11 +165,11 @@ function updatePlayer(){
 
     // player chooses desired weapon
     if (arsenal.bullets.isDown) {
-        this.weapon = 'bullets';
+        player.weapon = 'bullets';
     } else if (arsenal.rockets.isDown) {
-        this.weapon = 'rockets';
+        player.weapon = 'rockets';
     } else if (arsenal.laser.isDown) {
-        this.weapon = 'laser';
+        player.weapon = 'laser';
     }
 }
 
