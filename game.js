@@ -41,7 +41,7 @@ function preload () {
         // http://www.zeldaelements.net/images/games/the_minish_cap/items_and_equipment/bombs.png
     game.load.image('coin','level_elements/bitcoin.png');
         // digitalmoneytimes.com
-    game.load.spritesheet('explosion','explosion.png',60,60);
+    game.load.spritesheet('explosion','weapons/explosion.png',60,60);
         // korzonrocknet.deviantart.com
     game.load.image('pokeball','weapons/pokeball.png'); 
         // http://creepypasta81691.deviantart.com/art/Pokeball-Sprite-295593219
