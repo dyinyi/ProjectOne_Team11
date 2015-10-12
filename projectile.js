@@ -20,13 +20,13 @@ function Projectile(game) {
     // rockets
     rockets = game.add.group();
     weaponType(rockets,'rockets','bomb',0.8,1500,100,50,true,true);
-    bullets.enableBody = true;
+    rockets.enableBody = true;
     game.physics.arcade.enable(rockets, Phaser.Physics.ARCADE);
     
     // lasers
     lasers = game.add.group();
     weaponType(lasers,'lasers','blueBall',0.4,1,2,100,false,false);
-    bullets.enableBody = true;
+    lasers.enableBody = true;
     game.physics.arcade.enable(lasers, Phaser.Physics.ARCADE);
 }
 
@@ -114,14 +114,28 @@ function accelerateToObject(obj1, obj2, speed) {
 // explodes a sprite:
 //  1. destroys the sprite 
 //  2. runs an explosion sequence
-function explode(object) {
+function endProjectile(object) {
 
-    explosion = this.game.add.sprite(object.x-20, object.y-20, 'explosion');
-    explosion.killOnComplete = true;
+    console.log(object);
 
-    object.destroy();
-    explosion.animations.add('explosion', [0,1,2,3,4,5,6,7,8,9], 10, false);
-    explosion.animations.play('explosion',30,false,true);
+    // non-explosives die
+    if (object.parent.explosive === false) {
+
+        object.destroy();
+
+    } 
+
+    // explosives EXPLODE
+    else {
+
+        explosion = this.game.add.sprite(object.x-20, object.y-20, 'explosion');
+        explosion.killOnComplete = true;
+
+        object.destroy();
+        explosion.animations.add('explosion', [0,1,2,3,4,5,6,7,8,9], 10, false);
+        explosion.animations.play('explosion',30,false,true);
+
+    }
 
 }
 

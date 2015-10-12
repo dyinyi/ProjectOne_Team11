@@ -1,7 +1,7 @@
 // wall.js
 
 function Wall(x, y, w, h) {
-    wall =	game.add.tileSprite(x, y, w, h, 'wall');
+    wall = game.add.tileSprite(x, y, w, h, 'wall');
     game.physics.arcade.enable(wall, Phaser.Physics.ARCADE);
     wall.body.collideWorldBounds = true;
     walls.add(wall);

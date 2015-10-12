@@ -120,8 +120,15 @@ function update() {
     	door.destroy();
     }
 
-    // Make bullets explode when they hit walls
-    game.physics.arcade.overlap(bullets, wall, explode, null, this);
+    // Make bullets die when they hit walls
+    game.physics.arcade.collide(bullets, walls);
+    game.physics.arcade.collide(rockets, walls);
+    game.physics.arcade.collide(lasers, walls);
+    //game.physics.arcade.overlap(bullets, wall, explode, null, this);
+    //game.physics.arcade.overlap(wall, projectiles, explode, null, this);
+    //game.physics.arcade.overlap(bullets.children,walls,endProjectile);
+    //game.physics.arcade.overlap(rockets.children,walls,endProjectile,null,this);
+    //game.physics.arcade.overlap(lasers.children,walls,endProjectile,null,this);
 
     // homing
     startHoming(rockets);

@@ -102,12 +102,9 @@ Enemy.prototype.enemyTakesDamage = function(enemy,projectile) {
     // enemy takes damage
     this.damage(projectile.parent.power);
 
-    // explosive projectiles (e.g., bombs/rockets) explode
-    if (projectile.parent.homing) {
-        explode(projectile);
-    } else {
-        projectile.destroy();
-    }
+    // destroy projectile
+    endProjectile(projectile);
+
 }
 
 
