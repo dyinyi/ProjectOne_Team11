@@ -19,6 +19,8 @@ function preload () {
 	game.load.image('background','level_elements/CircuitBoard.jpg');
     game.load.image('wall', 'level_elements/wall.jpg');
         // http://i.ytimg.com/vi/fdJrQMvLHSM/hqdefault.jpg
+    game.load.image('XP', 'level_elements/windowsXP.jpg');
+        //www.hdwallpapers.in
     game.load.image('key', 'level_elements/key.png');
     game.load.image('door', 'level_elements/stone.png');
     game.load.image('sandBrick','level_elements/sandBrick.png');
@@ -46,8 +48,9 @@ function preload () {
 }
 
 function create() {
+
 	game.physics.startSystem(Phaser.Physics.ARCADE);
-	game.add.tileSprite(0, 0, 1920, 1920, 'background');
+	game.add.tileSprite(0, 0, 1920, 1920, 'XP');
 	walls = game.add.group();
 	walls.enableBody = true;
 
@@ -60,7 +63,6 @@ function create() {
 	
 	enemyGroup = game.add.group();
     
-    var enemyType1 = setEnemyType(20,2,'speedship',100,200,250,0.75,50,50);
     enemy1 = new Enemy(game, 300, 1850, enemyType1);
     enemy2 = new Enemy(game, 400, 1500, enemyType1);
     enemy3 = new Enemy(game, 650, 1700, enemyType1);
@@ -100,7 +102,9 @@ function create() {
 }
 
 function update() {
+
 	updatePlayer();
+
     game.physics.arcade.collide(player, walls);
     game.physics.arcade.collide(player, doors, openDoor, null, this);
     game.physics.arcade.overlap(player, keys, collectKey, null, this);
@@ -110,12 +114,18 @@ function update() {
     game.physics.arcade.overlap(lava3, player, killPlayer, null, this);
     game.physics.arcade.collide(player, endDoors, openEndDoor, null, this);
     game.physics.arcade.overlap(sandBrick, projectiles, destroyBrick, null, this);
+    
+    // handles door durability
     if (killCount == 7) {
     	door.destroy();
     }
 
     // Make bullets explode when they hit walls
-    //game.physics.arcade.overlap(walls,bullets, explode, null, this);
+    game.physics.arcade.overlap(bullets, wall, explode, null, this);
+
+    // homing
+    startHoming(rockets);
+
 }
 
 
@@ -123,3 +133,4 @@ function render() {
 	game.debug.body(wall);
 	game.debug.body(player);
 }
+

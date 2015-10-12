@@ -16,12 +16,12 @@ function Bitcoin(game, x, y, value) {
 	this.name = bitcoinID;
 	bitcoinID += 1;
 	bitcoinGroup.add(this);
-	console.log("bitcoin created"+" " +value + " " +" ID:" + bitcoinID);
+	//console.log("bitcoin created " +value + "  ID: " + bitcoinID);
 }
 
 function pickUpCoin() {
 	player.cash += this.value;
-	console.log("bitcoin collected"+" " +this.value);
+	//console.log("bitcoin collected " +this.value);
 	this.destroy();
 }
 
