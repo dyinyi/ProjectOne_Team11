@@ -5,7 +5,7 @@
 // bomb = rocket
 // blueBall = laser
 
-Projectile.prototype = Object.create(Phaser.Sprite.prototype);
+Projectile.prototype = Object.create(Phaser.Group.prototype);
 Projectile.prototype.constructor = Projectile;
 Projectile.prototype.force = {x:0.0, y:0.0};
 
@@ -13,31 +13,31 @@ function Projectile(game) {
 
     // bullets
     bullets = game.add.group();
-    weaponType(bullets,'bullets','pokeball',0.5,70,2,500,false,false);
-    bullets.enableBody = true;
-    game.physics.arcade.enable(bullets, Phaser.Physics.ARCADE);
+    weaponType(bullets,'bullets','pokeball',5,0.5,70,2,500,false,false);
 
     // rockets
     rockets = game.add.group();
-    weaponType(rockets,'rockets','bomb',0.8,1500,100,50,true,true);
-    rockets.enableBody = true;
-    game.physics.arcade.enable(rockets, Phaser.Physics.ARCADE);
-    
+    weaponType(rockets,'rockets','bomb',20,0.8,1500,100,50,true,true);
+
     // lasers
     lasers = game.add.group();
-    weaponType(lasers,'lasers','blueBall',0.4,1,2,100,false,false);
-    lasers.enableBody = true;
-    game.physics.arcade.enable(lasers, Phaser.Physics.ARCADE);
+    weaponType(lasers,'lasers','blueBall',20,0.4,1,2,100,false,false);
 }
 
-function weaponType(group,name,img,prop,rate,pwr,speed,homing,explosive) {
+function weaponType(group,name,img,size,prop,rate,pwr,speed,homing,explosive) {
 
     group.enableBody = true;
     group.physicsBodyType = Phaser.Physics.ARCADE;
 
+    // name and sprite
     group.name = name;
     group.img = img;
+
+    // size and proportion to sprite file
+    group.hitSize = size;
     group.proportion = prop;
+
+    // weapon properties
     group.fireRate = rate;
     group.power = pwr;
     group.speed = speed;
@@ -46,6 +46,17 @@ function weaponType(group,name,img,prop,rate,pwr,speed,homing,explosive) {
 
 }
 
+function weaponCollisions(weapon) {
+
+    for (var i = 0; i < bullets.length; i++) {
+
+        if (game.physics.arcade.overlap(weapon.children[i],walls)) {
+            endProjectile(weapon.children[i]);
+        }
+    }
+}
+
+// allows for consistent rate of fire 
 var nextFire = 0;
 
 // prep firing weapon
@@ -67,34 +78,30 @@ function singleFire(group) {
         nextFire = game.time.now + group.fireRate;
         var round = group.getFirstDead();
         round.scale.setTo(group.proportion,group.proportion);
-        round.body.setSize(25,25);
+        round.body.setSize(group.hitSize,group.hitSize);
         round.reset(player.x, player.y - 20);
         game.physics.arcade.moveToPointer(round,group.speed);
     }
 
 }
 
-// HOMING TO BE IMPLEMENTED IN THE FUTURE
-
 // takes in projectile to home and direts it along with the
 // target and homing speed to the main homing function
-function startHoming (bullet) {
+function pickTarget (bullet) {
 
-    // intialize target
-    var target = enemyGroup.children[0];
+    var target = enemyGroup.children[0]; // intialize target
 
     // loop through all enemies
     for (var i = 0; i < enemyGroup.length; i++) {
-        
-        // if an enemy is closer than enemy 1
-        if (game.physics.arcade.distanceBetween(player,enemyGroup.children[i]) <
-                game.physics.arcade.distanceBetween(player,target)) {
-
+        // if an enemy is closer than enemy 1, set that as the target
+        if (game.physics.arcade.distanceBetween(bullet,enemyGroup.children[i])
+                        < game.physics.arcade.distanceBetween(bullet,target)) {
             target = enemyGroup.children[i];
         }
     }
 
-    bullet.forEachAlive(accelerateToObject,bullet,target,5);
+    // move toward target
+    accelerateToObject(bullet,target,5);
 }
 
 // move toward object
@@ -116,13 +123,9 @@ function accelerateToObject(obj1, obj2, speed) {
 //  2. runs an explosion sequence
 function endProjectile(object) {
 
-    console.log(object);
-
     // non-explosives die
     if (object.parent.explosive === false) {
-
         object.destroy();
-
     } 
 
     // explosives EXPLODE

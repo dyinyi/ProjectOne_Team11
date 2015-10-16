@@ -1,4 +1,5 @@
-var game = new Phaser.Game(1000, 600, Phaser.AUTO, "game", {preload:preload, update:update, create:create});
+var game = new Phaser.Game(1000, 600, Phaser.AUTO, "game", 
+        {preload:preload, update:update, create:create});
 
 var wasd;
 var walls;
@@ -31,14 +32,15 @@ function preload () {
         // (from ship sprite pack)
     game.load.image('elShip','ship_sprites/elShip.png'); // enemy 2
         // cliparts.co (from Spaceship concept art for ELYSIUM by Ben Mauro)
-    game.load.image('player1','player_vehicles/basicCar.png');          // player 1
+    game.load.image('player1','player_vehicles/basicCar.png'); // player 1
         // http://www.xnadevelopment.com/sprites/images/Car.png
     game.load.image('player2','ship_sprites/medfighter.png');  // player 2
         // (from ship sprite pack)
     game.load.image('blueBall','weapons/blueBall.png'); 
         // http://www.zeldadungeon.net/wiki/images/a/a9/Ball-1.png
     game.load.image('bomb','weapons/bomb.png'); 
-        // http://www.zeldaelements.net/images/games/the_minish_cap/items_and_equipment/bombs.png
+        // http://www.zeldaelements.net/images/games/
+        //              the_minish_cap/items_and_equipment/bombs.png
     game.load.image('coin','level_elements/bitcoin.png');
         // digitalmoneytimes.com
     game.load.spritesheet('explosion','weapons/explosion.png',60,60);
@@ -113,25 +115,20 @@ function update() {
     game.physics.arcade.overlap(lava2, player, killPlayer, null, this);
     game.physics.arcade.overlap(lava3, player, killPlayer, null, this);
     game.physics.arcade.collide(player, endDoors, openEndDoor, null, this);
-    game.physics.arcade.overlap(sandBrick, projectiles, destroyBrick, null, this);
-    
+    game.physics.arcade.overlap(sandBrick, projectiles, destroyBrick,null,this);
+
+    weaponCollisions(bullets);
+    weaponCollisions(rockets);
+    weaponCollisions(lasers);
+
+
     // handles door durability
     if (killCount == 7) {
     	door.destroy();
     }
 
-    // Make bullets die when they hit walls
-    game.physics.arcade.collide(bullets, walls);
-    game.physics.arcade.collide(rockets, walls);
-    game.physics.arcade.collide(lasers, walls);
-    //game.physics.arcade.overlap(bullets, wall, explode, null, this);
-    //game.physics.arcade.overlap(wall, projectiles, explode, null, this);
-    //game.physics.arcade.overlap(bullets.children,walls,endProjectile);
-    //game.physics.arcade.overlap(rockets.children,walls,endProjectile,null,this);
-    //game.physics.arcade.overlap(lasers.children,walls,endProjectile,null,this);
-
     // homing
-    startHoming(rockets);
+    rockets.forEachAlive(pickTarget,rockets);
 
 }
 

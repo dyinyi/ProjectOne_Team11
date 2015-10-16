@@ -124,23 +124,11 @@ function updatePlayer(){
 
     //game.physics.arcade.overlap(enemyProjectiles, player, damaging, null, this);
 
-    var mX = game.input.mousePointer.x;
-    var mY = game.input.mousePointer.y;
-    
-    player.angle = Math.atan2(player.position.x - mX, player.position.y - mY)  * -57.2957795;
+    // moves player
+    movePlayer(player);
 
-    if (wasd.up.isDown) {
-        player.body.y -= P_skin.speed;
-    }
-    if (wasd.down.isDown) {
-        player.body.y += P_skin.speed;
-    }
-    if (wasd.left.isDown) {
-        player.body.x -= P_skin.speed;
-    }
-    if (wasd.right.isDown) {
-        player.body.x += P_skin.speed;
-    }
+    // player weapon selection and fire
+    weaponChoiceAndFire();
 
     // Checks for user input (click) for weapons fire
     // Fires weapon based on selection (Z,X,C)
@@ -171,5 +159,27 @@ function updatePlayer(){
         player.weapon = 'rockets';
     } else if (arsenal.laser.isDown) {
         player.weapon = 'laser';
+    }
+}
+
+// player movements
+function movePlayer() {
+
+    var mX = game.input.mousePointer.x;
+    var mY = game.input.mousePointer.y;
+    
+    player.angle = Math.atan2(player.position.x - mX, player.position.y - mY)  * -57.2957795;
+
+    if (wasd.up.isDown) {
+        player.body.y -= P_skin.speed;
+    }
+    if (wasd.down.isDown) {
+        player.body.y += P_skin.speed;
+    }
+    if (wasd.left.isDown) {
+        player.body.x -= P_skin.speed;
+    }
+    if (wasd.right.isDown) {
+        player.body.x += P_skin.speed;
     }
 }
