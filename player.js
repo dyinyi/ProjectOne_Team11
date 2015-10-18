@@ -7,7 +7,6 @@ var wasd;
 var arsenal;
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
-
 Player.prototype.constructor = Player;
 
 //Player.prototype.enemyVsPlayer = enemyVsPlayer;
@@ -23,7 +22,7 @@ function Player(game, x, y, P_skin) { //, P_weapon) {
     
     this.scale.setTo(0.1,0.1);
     this.anchor.setTo(0.5,0.5);
-    
+
     game.add.existing(this);
     
     this.enableBody = true;
@@ -46,14 +45,26 @@ function Player(game, x, y, P_skin) { //, P_weapon) {
     };
 
     arsenal = {
-        bullets: game.input.keyboard.addKey(Phaser.Keyboard.Z),
-        rockets: game.input.keyboard.addKey(Phaser.Keyboard.X),
-        laser: game.input.keyboard.addKey(Phaser.Keyboard.C),
+        bullets: game.input.keyboard.addKey(Phaser.Keyboard.TILDE),
+        rockets: game.input.keyboard.addKey(Phaser.Keyboard.ONE),
+        laser: game.input.keyboard.addKey(Phaser.Keyboard.TWO),
+        multiBullets: game.input.keyboard.addKey(Phaser.Keyboard.THREE),
+        multiLasers: game.input.keyboard.addKey(Phaser.Keyboard.FOUR),
+        nukes: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
     }
 
-    this.weapon = 'bullets';
-
+    this.weapon;
     this.cash = 0;
+    this.weaponsCaches = setCaches();
+
+}
+
+function setCaches() {
+
+    array = [false, false, false, false, false];
+
+    return array;
+
 }
 
 
@@ -128,38 +139,10 @@ function updatePlayer(){
     movePlayer(player);
 
     // player weapon selection and fire
-    weaponChoiceAndFire();
+    weaponChoice();
+    weaponFire();
 
-    // Checks for user input (click) for weapons fire
-    // Fires weapon based on selection (Z,X,C)
-    if (game.input.activePointer.isDown && player.alive) {
-        if (player.weapon === 'bullets') {
-            singleFire(bullets);
-        } else if (player.weapon === 'rockets') {
-            singleFire(rockets);
-       } else if (player.weapon === 'laser') {
-            singleFire(lasers);
-        }
-    }
-/*
-    if (specials.special1.isDown) {
-        useSpecial1();
-    }
-    if (specials.special2.isDown) {
-        useSpecial2();
-    }
-*/
-    //game.physics.arcade.overlap(enemyGroup, this, enemyVsPlayer, null, this);
-    //game.physics.arcade.overlap(projectilesGroup, this, projectilesVsPlayer, null, this);
-
-    // player chooses desired weapon
-    if (arsenal.bullets.isDown) {
-        player.weapon = 'bullets';
-    } else if (arsenal.rockets.isDown) {
-        player.weapon = 'rockets';
-    } else if (arsenal.laser.isDown) {
-        player.weapon = 'laser';
-    }
+    // when player finds a new weapon
 }
 
 // player movements
@@ -168,7 +151,7 @@ function movePlayer() {
     var mX = game.input.mousePointer.x;
     var mY = game.input.mousePointer.y;
     
-    player.angle = Math.atan2(player.position.x - mX, player.position.y - mY)  * -57.2957795;
+    player.angle = Math.atan2(player.position.x - mX, player.position.y - mY) * -57.2957795;
 
     if (wasd.up.isDown) {
         player.body.y -= P_skin.speed;
@@ -183,3 +166,46 @@ function movePlayer() {
         player.body.x += P_skin.speed;
     }
 }
+
+// player chooses desired weapon
+function weaponChoice() {
+
+    if (arsenal.bullets.isDown && player.weaponsCaches[0]) {
+        player.weapon = 'bullets';
+    } else if (arsenal.rockets.isDown && player.weaponsCaches[1]) {
+        player.weapon = 'rockets';
+    } else if (arsenal.laser.isDown && player.weaponsCaches[2]) {
+        player.weapon = 'laser';
+    } else if (arsenal.multiBullets.isDown && player.weaponsCaches[3]) {
+        player.weapon = 'multiBullets';
+    } else if (arsenal.multiLasers.isDown && player.weaponsCaches[4]) {
+        player.weapon = 'multiLasers';
+    }
+}
+
+// player fires equipped weapon
+function weaponFire() {
+
+    // Checks for user input (click) for weapons fire
+    // Fires weapon based on selection (Z,X,C)
+    if (player.alive) {
+        if (game.input.activePointer.isDown) {
+            if (player.weapon === 'bullets') {
+                singleFire(bullets);
+            } else if (player.weapon === 'rockets') {
+                singleFire(rockets);
+            } else if (player.weapon === 'laser') {
+                singleFire(lasers);
+            } else if (player.weapon === 'multiBullets') {
+                multiFire(multiBullets);
+            } else if (player.weapon === 'multiLasers') {
+                multiFire(multiLasers);
+            } 
+        }
+
+        if (arsenal.nukes.isDown && player.weaponsCaches[5]) {
+            nukeFire(nukes);
+        }
+    }
+}
+

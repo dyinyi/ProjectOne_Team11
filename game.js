@@ -1,5 +1,6 @@
-var game = new Phaser.Game(1000, 600, Phaser.AUTO, "game", 
+var game = new Phaser.Game(700, 600, Phaser.AUTO, "game", 
         {preload:preload, update:update, create:create});
+
 
 var wasd;
 var walls;
@@ -15,6 +16,7 @@ var player;
 var sandBrick;
 var killCount = 0;
 var door;
+var p;
 
 function preload () {
 	game.load.image('background','level_elements/CircuitBoard.jpg');
@@ -22,7 +24,7 @@ function preload () {
         // http://i.ytimg.com/vi/fdJrQMvLHSM/hqdefault.jpg
     game.load.image('XP', 'level_elements/windowsXP.jpg');
         //www.hdwallpapers.in
-    game.load.image('key', 'level_elements/key.png');
+    game.load.image('key', 'level_elements/endKey.png');
     game.load.image('door', 'level_elements/stone.png');
     game.load.image('sandBrick','level_elements/sandBrick.png');
     game.load.image('lava', 'level_elements/lava.png');
@@ -36,17 +38,33 @@ function preload () {
         // http://www.xnadevelopment.com/sprites/images/Car.png
     game.load.image('player2','ship_sprites/medfighter.png');  // player 2
         // (from ship sprite pack)
-    game.load.image('blueBall','weapons/blueBall.png'); 
-        // http://www.zeldadungeon.net/wiki/images/a/a9/Ball-1.png
+    game.load.image('coin','level_elements/bitcoin.png');
+        // digitalmoneytimes.com
+    game.load.image('pokeball','weapons/pokeball.png');
+        // http://creepypasta81691.deviantart.com/art/Pokeball-Sprite-295593219
+    game.load.image('tomato','weapons/Tomato-Sprite.png');
+        // http://img4.wikia.nocookie.net/__cb20140326231144/
+        //                  herebemonsters/images/b/b7/Tomato-Sprite.png
     game.load.image('bomb','weapons/bomb.png'); 
         // http://www.zeldaelements.net/images/games/
         //              the_minish_cap/items_and_equipment/bombs.png
-    game.load.image('coin','level_elements/bitcoin.png');
-        // digitalmoneytimes.com
     game.load.spritesheet('explosion','weapons/explosion.png',60,60);
         // korzonrocknet.deviantart.com
-    game.load.image('pokeball','weapons/pokeball.png'); 
-        // http://creepypasta81691.deviantart.com/art/Pokeball-Sprite-295593219
+    game.load.image('bluBall','weapons/blueBall.png');
+        // http://www.zeldadungeon.net/wiki/images/a/a9/Ball-1.png
+    game.load.image('greenBeam','weapons/laser.png'); 
+        //https://qph.is.quoracdn.net/main-qimg-
+        //             826a2483ab9104e55abf64f8ddaf2251?convert_to_webp=true
+    game.load.image('nuke','weapons/nuke.png'); 
+        // bay12forums.com user "Shook"
+    // barrel sprite posted on http://opengameart.org/ by user truezipp
+    game.load.image('blueBall_barrel','caches/blueBall_barrel.png');
+    game.load.image('bomb_barrel','caches/bomb_barrel.png');
+    game.load.image('laser_barrel','caches/laser_barrel.png');
+    game.load.image('poke_barrel','caches/poke_barrel.png');
+    game.load.image('tomato_barrel','caches/tomato_barrel.png');
+    game.load.image('nuke_barrel','caches/nuke_barrel.png');
+
 }
 
 function create() {
@@ -101,6 +119,11 @@ function create() {
     //setupSandBrick();
     endDoor();
     setupKey();
+
+
+    // put the weapons caches in the game
+    addCaches();
+
 }
 
 function update() {
@@ -117,10 +140,7 @@ function update() {
     game.physics.arcade.collide(player, endDoors, openEndDoor, null, this);
     game.physics.arcade.overlap(sandBrick, projectiles, destroyBrick,null,this);
 
-    weaponCollisions(bullets);
-    weaponCollisions(rockets);
-    weaponCollisions(lasers);
-
+    weaponCollisionsUpdate();
 
     // handles door durability
     if (killCount == 7) {
@@ -128,7 +148,12 @@ function update() {
     }
 
     // homing
-    rockets.forEachAlive(pickTarget,rockets);
+    if (enemyGroup.length > 0) {
+        rockets.forEachAlive(pickTarget,rockets);
+        nukes.forEachAlive(pickTarget,nukes);
+    }
+
+    //console.log("x: " + player.x + " | y: " + player.y);
 
 }
 
@@ -137,4 +162,3 @@ function render() {
 	game.debug.body(wall);
 	game.debug.body(player);
 }
-

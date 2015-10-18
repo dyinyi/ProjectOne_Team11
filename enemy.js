@@ -6,7 +6,7 @@ var enemyID = 0;
 var enemyType1 = setEnemyType(20,2,'speedship',100,200,250,0.75,10,18);
 
 var E_type = { health:20, type:1, name:"N/A", speed:0, 
-                coin:1, aggro:0, scale:1, sizeX:1, sizeY:1 };
+                coin:1, aggro:0, scale:1, sizeX:10, sizeY:10 };
 
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -34,7 +34,6 @@ function Enemy(game, x, y, E_type) {
     this.coin = E_type.coin;
     this.aggro = E_type.aggro;
     enemyGroup.add(this);
-
 }
 
 
@@ -89,10 +88,13 @@ Enemy.prototype.update = function(){
     // checks for player-enemy overlap
     game.physics.arcade.overlap(this, player, gettingHitByP, null, this);
     
-    // Overlap with play3r fire
+    // Overlap with player fire
     game.physics.arcade.overlap(this,bullets,this.enemyTakesDamage,null,this);
     game.physics.arcade.overlap(this,rockets,this.enemyTakesDamage,null,this);
     game.physics.arcade.overlap(this,lasers,this.enemyTakesDamage,null,this);
+    game.physics.arcade.overlap(this,multiBullets,this.enemyTakesDamage,null,this);
+    game.physics.arcade.overlap(this,multiLasers,this.enemyTakesDamage,null,this);
+    game.physics.arcade.overlap(this,nukes,this.enemyTakesDamage,null,this);
 
 }
 
