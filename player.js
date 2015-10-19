@@ -59,10 +59,11 @@ function Player(game, x, y, P_skin) { //, P_weapon) {
 
 }
 
+// Weapon values: bullets:0, rockets:1, laser:2, multi bullets:3,
+//                multi laser:4, nukes:5
 function setCaches() {
 
     array = [false, false, false, false, false];
-
     return array;
 
 }
@@ -71,7 +72,7 @@ function setCaches() {
 function setSkin(skinType) {
 
     if (skinType == 1) {
-        P_skin.health = 15;
+        P_skin.health = 150;
         P_skin.type = 1;
         P_skin.name = 'player1';
         P_skin.speed = 4.5;
@@ -111,18 +112,17 @@ function useSpecial2(game) {
     }
 }
 
-/*
-function projectilesVsPlayer(enemyProjectiles){
-    this.health -= enemyProjectiles.power;
-    enemyProjectiles.kill();
+function EbulletsVsPlayer(){
+    console.log(player.health);
+    player.damage(Ebullets.power);
+    //Ebullets.kill();
 }
-*/
 
-/*
+
 function enemyVsPlayer(){
-    this.health -= 5;
+    player.health -= 5;
 }
-*/
+
 
 function updatePlayer(){
 
@@ -137,6 +137,10 @@ function updatePlayer(){
 
     // moves player
     movePlayer(player);
+
+    // damage to player from enemies
+    game.physics.arcade.overlap(enemyGroup, player, enemyVsPlayer, null, this);
+    game.physics.arcade.overlap(Ebullets, player, EbulletsVsPlayer, null, this);
 
     // player weapon selection and fire
     weaponChoice();

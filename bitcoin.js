@@ -16,15 +16,14 @@ function Bitcoin(game, x, y, value) {
 	this.name = bitcoinID;
 	bitcoinID += 1;
 	bitcoinGroup.add(this);
-	//console.log("bitcoin created " +value + "  ID: " + bitcoinID);
 }
 
 function pickUpCoin() {
 	player.cash += this.value;
-	//console.log("bitcoin collected " +this.value);
 	this.destroy();
 }
 
-Bitcoin.prototype.update = function (){
+Bitcoin.prototype.update = function() {
 	game.physics.arcade.overlap(this, player, Bitcoin.prototype.pickupcoin, null, this);
 }
+

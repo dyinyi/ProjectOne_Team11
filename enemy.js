@@ -17,6 +17,7 @@ Enemy.prototype.gettingHitByP = gettingHitByP;
 Enemy.prototype.dropCoin = dropCoin;
 Enemy.prototype.enemyFire = enemyFire;
 
+
 //Enemy.prototype.deploy = deploy;
 
 function Enemy(game, x, y, E_type) {
@@ -36,13 +37,6 @@ function Enemy(game, x, y, E_type) {
     enemyGroup.add(this);
 }
 
-
-//debugging function
-function gettingHitByP(){
-    killPlayer();
-    this.dropCoin();
-}
-
 function setEnemyType(health, type, name, speed, coin, aggro, scale, sizeX, sizeY){
     var newE_type= {health:20, type:1, name:"N/A", speed:0, coin:0, dmg: 0};
     newE_type.health = health;
@@ -54,22 +48,9 @@ function setEnemyType(health, type, name, speed, coin, aggro, scale, sizeX, size
     newE_type.scale = scale;
     newE_type.sizeX = sizeX;
     newE_type.sizeY = sizeY;
-
+    
     return newE_type;
-
 }
-
-function enemyFire(type, pattern){
-    //todo
-
-}
-
-
-function dropCoin(){
-    new Bitcoin(game, this.position.x, this.position.y, this.coin);
-}
-
-
 
 Enemy.prototype.update = function(){
 
@@ -82,12 +63,12 @@ Enemy.prototype.update = function(){
         // move enemies toward player
         if (game.physics.arcade.distanceBetween(this,player) < this.aggro) {
             game.physics.arcade.moveToObject(this, player, this.speed);
+            //enemyAttack(Ebullets);
+            //this.enemyAttack(Elasers);
+            enemyFire(Ebullets,this);
         }
     }
 
-    // checks for player-enemy overlap
-    game.physics.arcade.overlap(this, player, gettingHitByP, null, this);
-    
     // Overlap with player fire
     game.physics.arcade.overlap(this,bullets,this.enemyTakesDamage,null,this);
     game.physics.arcade.overlap(this,rockets,this.enemyTakesDamage,null,this);
@@ -106,7 +87,37 @@ Enemy.prototype.enemyTakesDamage = function(enemy,projectile) {
 
     // destroy projectile
     endProjectile(projectile);
+}
 
+//debugging function
+function gettingHitByP() {
+    killPlayer();
+    this.dropCoin();
+}
+
+function dropCoin() {
+    new Bitcoin(game, this.position.x, this.position.y, this.coin);
+}
+
+// ENEMY PROJECTILE IMPLEMENTATION
+var nextFire = 0;
+
+function enemyFire(group,enemy) {
+
+    // create sprite and define boundary properties
+    group.createMultiple(1,group.img);
+    group.setAll('checkWorldBounds',true);
+    group.setAll('outOfBoundsKill',true);
+
+    // fire weapon 
+    if (game.time.now > nextFire && group.countDead() > 0) {
+        nextFire = game.time.now + group.fireRate;
+        var round = group.getFirstDead();
+        round.scale.setTo(group.proportion,group.proportion);
+        round.body.setSize(group.hitSize,group.hitSize);
+        round.reset(enemy.x, enemy.y - 20);
+        game.physics.arcade.moveToObject(round,player,group.speed);
+    }
 }
 
 

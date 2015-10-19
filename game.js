@@ -1,4 +1,4 @@
-var game = new Phaser.Game(700, 600, Phaser.AUTO, "game", 
+var game = new Phaser.Game(1000, 600, Phaser.AUTO, "game", 
         {preload:preload, update:update, create:create});
 
 
@@ -8,15 +8,23 @@ var wall;
 var keys;
 var doors;
 var hasKey = 0;
-var sandBricks;
 var lava;
 var enemyGroup;
 var bitcoinGroup;
+var menu;
 var player;
-var sandBrick;
 var killCount = 0;
 var door;
-var p;
+var baseDMG = 1;
+var baseSPD = 1;
+var baseHP = 1;
+var baseFR = 1;
+var pauseInput;
+
+// text related globals
+var coinText;
+
+
 
 function preload () {
 	game.load.image('background','level_elements/CircuitBoard.jpg');
@@ -26,7 +34,6 @@ function preload () {
         //www.hdwallpapers.in
     game.load.image('key', 'level_elements/endKey.png');
     game.load.image('door', 'level_elements/stone.png');
-    game.load.image('sandBrick','level_elements/sandBrick.png');
     game.load.image('lava', 'level_elements/lava.png');
     game.load.image('endDoor', 'level_elements/door.jpg');
     game.load.image('space', 'level_elements/Deep-Space.jpg');
@@ -57,6 +64,10 @@ function preload () {
         //             826a2483ab9104e55abf64f8ddaf2251?convert_to_webp=true
     game.load.image('nuke','weapons/nuke.png'); 
         // bay12forums.com user "Shook"
+
+    game.load.image('menu','menu.png');
+    game.load.json('difficulty', 'settings.json'); // loading JSON
+
     // barrel sprite posted on http://opengameart.org/ by user truezipp
     game.load.image('blueBall_barrel','caches/blueBall_barrel.png');
     game.load.image('bomb_barrel','caches/bomb_barrel.png');
@@ -71,16 +82,36 @@ function create() {
 
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.add.tileSprite(0, 0, 1920, 1920, 'XP');
+
+    // pause menu input
+    pauseInput = game.input.keyboard.addKey(Phaser.Keyboard.P);
+
+    //loading JSON for difficulty settings
+    var settingsJSON = game.cache.getJSON('difficulty');
+    baseDMG = settingsJSON.baseDMG;
+    baseSPD = settingsJSON.baseSPD;
+    baseHP = settingsJSON.baseHP;
+    baseFR = settingsJSON.baseFR;
+
+    // game bounds
+    game.world.setBounds(0, 0, 1920, 1920);
+
+    // walls
 	walls = game.add.group();
 	walls.enableBody = true;
-
 	drawWalls();
+
+    // lava
+    this.lavas = this.add.physicsGroup();
+    addLavas();
 	
+    // player
 	setSkin(1);
 	player = new Player(game, 70, 1550, P_skin);
 	player.enableBody = true;
 	player.body.collideWorldBounds = true;
 	
+    // enemies
 	enemyGroup = game.add.group();
     
     enemy1 = new Enemy(game, 300, 1850, enemyType1);
@@ -104,22 +135,26 @@ function create() {
     enemyType2 = setEnemyType(50,40,'elShip',100,20,250,0.5,100,100);
     enemy11 = new Enemy(game, 1500, 1700, enemyType2);
 
-    // add in the bitcoinssss
+    // bitcoins and bitcoin total tracking
     bitcoinGroup = game.add.group();
+    coinString = 'Bitcoins: ';
+    coinText = game.add.text(10, 10, coinString + player.cash, { font: '34px Arial', fill: '#fff' });
+    coinText.fixedToCamera = true;
+    coinText.cameraOffset.setTo(40,20);
 
+    // health bar
+    healthString = 'Health: ';
+    healthText = game.add.text(10, 10, healthString + player.health, { font: '34px Arial', fill: '#fff' });
+    healthText.fixedToCamera = true;
+    healthText.cameraOffset.setTo(750,20);
+   
     // weapon groups
     projectiles = new Projectile(game);
-	
-    this.lavas = this.add.physicsGroup();
-    addLavas();
-    
-    game.world.setBounds(0, 0, 1920, 1920);
-    
+
+    // doors and keys    
     setupDoor();
-    //setupSandBrick();
     endDoor();
     setupKey();
-
 
     // put the weapons caches in the game
     addCaches();
@@ -128,32 +163,42 @@ function create() {
 
 function update() {
 
+    // HUD
+    coinText.text = coinString + player.cash;
+    healthText.text = healthString + player.health;
+
+    // pause and unpause
+    gamePause();
+    game.input.onDown.add(gameUnpause,self);
+
+    // player update
 	updatePlayer();
 
+    // wall collision prevention
+    weaponCollisionsUpdate();
     game.physics.arcade.collide(player, walls);
-    game.physics.arcade.collide(player, doors, openDoor, null, this);
-    game.physics.arcade.overlap(player, keys, collectKey, null, this);
-    game.physics.arcade.collide(player, sandBricks);
+    game.physics.arcade.collide(enemyGroup,walls);
+
+    // lava/player collisions
     game.physics.arcade.overlap(lava, player, killPlayer, null, this);
     game.physics.arcade.overlap(lava2, player, killPlayer, null, this);
     game.physics.arcade.overlap(lava3, player, killPlayer, null, this);
-    game.physics.arcade.collide(player, endDoors, openEndDoor, null, this);
-    game.physics.arcade.overlap(sandBrick, projectiles, destroyBrick,null,this);
 
-    weaponCollisionsUpdate();
+    // player/misc. collisions
+    game.physics.arcade.collide(player, doors, openDoor, null, this);
+    game.physics.arcade.overlap(player, keys, collectKey, null, this);
+    game.physics.arcade.collide(player, endDoors, openEndDoor, null, this);
 
     // handles door durability
     if (killCount == 7) {
     	door.destroy();
     }
 
-    // homing
+    // homing weapons
     if (enemyGroup.length > 0) {
         rockets.forEachAlive(pickTarget,rockets);
         nukes.forEachAlive(pickTarget,nukes);
     }
-
-    //console.log("x: " + player.x + " | y: " + player.y);
 
 }
 

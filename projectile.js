@@ -30,6 +30,15 @@ function Projectile(game) {
     // nukes
     nukes = game.add.group();
     weaponType(nukes,'nukes','nuke',20,0.8,10000,100,2,true,true);
+
+                            /* Enemy weapons */
+    // enemy bullets
+    Ebullets = game.add.group();
+    weaponType(bullets,'bullets','pokeball',8,0.5,70,2,500,false,false);
+
+    // enemy lasers
+    Elasers = game.add.group();
+    weaponType(Ebullets,'lasers','greenBeam',10,0.15,150,2,300,false,false);
 }
 
 function weaponType(group,name,img,size,prop,rate,pwr,speed,homing,explosive) {
@@ -63,6 +72,10 @@ function weaponCollisionsUpdate() {
     weaponCollisions(multiBullets);
     weaponCollisions(multiLasers);
     weaponCollisions(nukes);
+
+    // enemy weapons
+    weaponCollisions(Ebullets);
+    weaponCollisions(Elasers);    
 }
 
 // ends projectiles if they touch the walls
