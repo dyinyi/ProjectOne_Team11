@@ -7,17 +7,6 @@ function setupKey() {
 	key.scale.setTo(0.08,0.08);
 }
 
-function downloadDoor() {
-	downloadDoors = game.add.group();
-    downloadDoors.enableBody = true;
-    downloadDoor = downloadDoors.create(1500,1875,'downloadDoor');
-    downloadDoor.body.collideWorldBounds = true;
-    downloadDoor.body.immovable = true;
-    downloadDoor.scale.setTo(0.25,0.25);
-    downloadDoor.anchor.setTo(0.5,0.5);
-    downloadDoor.angle += 270;
-}
-
 function changeBackground() {
 	background.kill();
 }

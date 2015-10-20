@@ -45,7 +45,7 @@ function addCaches() {
 	
 	// bombs
 	directions = "Press the '1' key\nand click to\nfire homing bombs";
-	bomb_barrel = new Cache(game,500,1700,'bomb_barrel',1,directions);
+	bomb_barrel = new Cache(game,2400,600,'bomb_barrel',1,directions);
 
 	/*// laser
 	directions = "Press the '2' key\nand click to\nfire the laser";
@@ -53,7 +53,7 @@ function addCaches() {
 
 	// multi bullets/tomatoes
 	directions = "Press the '3' key\nand click to \nfire tomato bullets";
-	tomato_barrel = new Cache(game,2400,600,'tomato_barrel',3,directions);
+	tomato_barrel = new Cache(game,500,1700,'tomato_barrel',3,directions);
 
 	/*// multi laser/blueBall
 	directions = "Press the '4' key\nand click to \nfire the ultra laser";

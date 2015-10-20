@@ -22,6 +22,8 @@ function drawWalls() {
 	Wall(320,1568,32,256);
 	Wall(672,1600,288,32);
 	Wall(352,1792,288,32);
+	Wall(2610,992,32,900);
+	Wall(1600,1890,1038,32);
 }
 
 function Block(x, y, w, h) {

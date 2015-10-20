@@ -73,6 +73,7 @@ function setSkin(skinType) {
 function updatePlayer(){
 
     if (player.health <= 0) {
+        rektFX.play();
         player.kill();
         game.add.text(player.x, player.y, "GAME OVER",
             { font: "30px Arial", fill: "#fff", align: "center" });
@@ -100,8 +101,10 @@ function updatePlayer(){
 function EweaponsVsPlayer(player,Eweapon) {
 
     player.damage(Eweapon.parent.power); // damage player
-
     endProjectile(Eweapon); // destroy projectile
+
+    // Audio
+    hitFX.play();
 }
 
 
@@ -155,20 +158,25 @@ function weaponFire() {
     if (player.alive) {
         if (game.input.activePointer.isDown) {
             if (player.weapon === 'bullets') {
+                bulletsFX.play();
                 singleFire(bullets);
             } else if (player.weapon === 'rockets') {
                 singleFire(rockets);
             } else if (player.weapon === 'laser') {
                 singleFire(lasers);
             } else if (player.weapon === 'multiBullets') {
+                multiBulletsFX.play();
                 multiFire(multiBullets);
             } else if (player.weapon === 'multiLasers') {
+                multiLaserFX.play()
                 multiFire(multiLasers);
             } 
         }
 
         if (arsenal.nukes.isDown && player.weaponsCaches[5]) {
+            nukesFX.play();
             nukeFire(nukes);
         }
     }
 }
+

@@ -13,7 +13,7 @@ function Projectile(game) {
 
     // rockets
     rockets = game.add.group();
-    weaponType(rockets,'rockets','bomb',20,0.8,1300,200,5,true,true);
+    weaponType(rockets,'rockets','bomb',20,0.8,1300,50,5,true,true);
 
     // lasers
     lasers = game.add.group();
@@ -115,6 +115,10 @@ function singleFire(group) {
         round.body.setSize(group.hitSize,group.hitSize);
         round.reset(player.x, player.y - 20);
         game.physics.arcade.moveToPointer(round,group.speed);
+
+        if (group.name === 'rockets') {
+            rocketsFX.play();
+        }
     }
 }
 

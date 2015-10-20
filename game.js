@@ -24,16 +24,19 @@ var baseHP = 1;
 var baseFR = 1;
 var pauseInput;
 var background;
+var gameEndText;
 
 // text related globals
 var coinText;
 var coinString;
 
 function preload () {
+
+    /* IMAGE FILES */
     game.load.image('background2','images/space_mac.png');
     game.load.image('background','images/xp.jpg');
     game.load.image('sandbrick','images/sandBrick.png');
-    game.load.spritesheet('lava', 'images/lava.png');
+    game.load.image('lava', 'images/firewall.png');
     game.load.image('wall', 'images/wall.jpg');
         // http://i.ytimg.com/vi/fdJrQMvLHSM/hqdefault.jpg
     game.load.image('XP', 'images/windowsXP.jpg');
@@ -56,6 +59,8 @@ function preload () {
     game.load.image('player2','ship_sprites/medfighter.png');  // player 2
         // (from ship sprite pack)
     game.load.image('coin','images/bitcoin.png');
+    game.load.image('dogecoin','images/dogen.png');
+        // http://howtodoge.com/images/dogen.png
     game.load.image('enemy_bullet','images/bullet_2.png');
         // digitalmoneytimes.com
     game.load.image('pokeball','images/pokeball.png');
@@ -91,6 +96,25 @@ function preload () {
     game.load.image('tomato_barrel','images/tomato_barrel.png');
     game.load.image('nuke_barrel','images/nuke_barrel.png');
 
+    /* SOUND FILES */
+    game.load.audio('startScene', 'audio/All of Us.mp3');
+    game.load.audio('bossScene', "audio/We're the Resistors.mp3");
+    game.load.audio('endScene', "audio/We're all under the stars.mp3");
+    game.load.audio('bulletsFX', 'audio/bullets.wav');
+    game.load.audio('lasersFX', 'audio/lasers.wav');
+    game.load.audio('rocketsFX', 'audio/rockets.wav');
+    game.load.audio('nukesFX', 'audio/nukes.wav');
+    game.load.audio('multiBulletsFX', 'audio/multiBullets.wav');
+    game.load.audio('multiLasersFX', 'audio/multiLasers.wav');
+    // game.load.audio('multiLasersFX', 'audio/multiLasers_b.wav');
+    game.load.audio('hitFX', 'audio/hit.wav');
+    game.load.audio('explosion1FX', 'audio/explosion1.wav');
+    game.load.audio('explosion2FX', 'audio/explosion2.wav');
+    game.load.audio('explosion3FX', 'audio/explosion3.wav');
+    game.load.audio('explosion4FX', 'audio/explosion4.wav');
+    game.load.audio('coinFX', 'audio/coin.wav');
+    game.load.audio('rektFX', 'audio/rekt.wav');
+
 }
 
 function create() {
@@ -101,6 +125,27 @@ function create() {
     background2.tileScale.setTo(1.2,1.5);
     background = game.add.tileSprite(0, 0, 2640, 1920, 'background');
     background.tileScale.setTo(1.375,1.6);
+
+    /* AUDIO */
+    startScene = game.add.audio('startScene');
+    startScene.loop = true;
+    bossScene = game.add.audio('bossScene');
+    bossScene.loop = true;
+    endScene = game.add.audio('endScene');
+    bulletsFX = game.add.audio('bulletsFX');
+    lasersFX = game.add.audio('lasersFX');
+    rocketsFX = game.add.audio('rocketsFX');
+    nukesFX = game.add.audio('nukesFX');
+    multiBulletsFX = game.add.audio('multiBulletsFX');
+    multiLasersFX = game.add.audio('multiLasersFX');
+    hitFX = game.add.audio('hitFX');
+    explosion1FX = game.add.audio('explosion1FX');
+    explosion2FX = game.add.audio('explosion2FX');
+    explosion3FX = game.add.audio('explosion3FX');
+    explosion4FX = game.add.audio('explosion4FX');
+    coinFX = game.add.audio('coinFX');
+    rektFX = game.add.audio('rektFx');
+    startScene.play(); //when the level starts
 
     // pause menu input
     pauseInput = game.input.keyboard.addKey(Phaser.Keyboard.P);
@@ -164,7 +209,17 @@ function create() {
     secondDoor.body.immovable = true;
     secondDoor.scale.setTo(2.0, 1.0);
     setupKey();
-    downloadDoor();
+    
+
+    // download door
+    downloadDoors = game.add.group();
+    downloadDoors.enableBody = true;
+    downloadDoor = downloadDoors.create(1500,1875,'downloadDoor');
+    downloadDoor.body.collideWorldBounds = true;
+    downloadDoor.body.immovable = true;
+    downloadDoor.scale.setTo(0.25,0.25);
+    downloadDoor.anchor.setTo(0.5,0.5);
+    downloadDoor.angle += 270;
 
     // put the weapons caches in the game
     addCaches();
@@ -199,8 +254,8 @@ function update() {
     game.physics.arcade.overlap(lava4, player, killPlayer, null, this);
     game.physics.arcade.overlap(lava5, player, killPlayer, null, this);
     game.physics.arcade.overlap(lava6, player, killPlayer, null, this);
-    game.physics.arcade.overlap(lava7, player, killPlayer, null, this);
-*/
+    game.physics.arcade.overlap(lava7, player, killPlayer, null, this);*/
+
     // player/misc. collisions
     game.physics.arcade.collide(player, firstDoors, openDoor, null, this);
     game.physics.arcade.overlap(player, keys, collectKey, null, this);

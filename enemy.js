@@ -4,8 +4,8 @@
 var enemyID = 0;
 
 var enemyType1 = setEnemyType(20,'speedship',100,200,250,1,10,18,'Ebullets'); // basic
-var enemyType2 = setEnemyType(40,'heavyship',120,200,350,1.3,60,80,'Ebullets'); // secondary
-var enemyType3 = setEnemyType(2000,'elShip',300,1000,300,1.6,200,200,'Elasers');//boss
+var enemyType2 = setEnemyType(100,'heavyship',250,200,350,1.3,60,80,'Ebullets'); // secondary
+var enemyType3 = setEnemyType(200,'elShip',300,1000,300,1.6,200,200,'Elasers');//boss
 var enemyType4 = setEnemyType(50,'turrett',0,50,300,0.5,10,20,'Ebombs'); // turret
 
 var E_type = { health:20, name:"N/A", speed:0, coin:1, aggro:0, 
@@ -113,6 +113,19 @@ Enemy.prototype.update = function() {
 Enemy.prototype.enemyTakesDamage = function(enemy,projectile) {
     
     this.damage(projectile.parent.power); // enemy takes damage
+
+    // Audio
+    rndN = game.rnd.between(1,4);
+    if (rndN == 1) {
+        explosion1FX.play();
+    } else if(rndN == 2) {
+        explosion2FX.play();
+    } else if(rndN == 3) {
+        explosion3FX.play();
+    } else if(rndN == 4) {
+        explosion4FX.play();
+    }
+
     endProjectile(projectile); // destroy projectile
 }
 
@@ -123,7 +136,12 @@ function gettingHitByP() {
 }
 
 function dropCoin() {
-    new Bitcoin(game, this.position.x, this.position.y, this.coin);
+
+    if (this.name === 'elShip') {
+        new Dogecoin(game, this.position.x, this.position.y);
+    } else {
+        new Bitcoin(game, this.position.x, this.position.y, this.coin);
+    }
 }
 
 // ENEMY PROJECTILE IMPLEMENTATION
