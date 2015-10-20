@@ -6,7 +6,7 @@ Projectile.prototype.constructor = Projectile;
 Projectile.prototype.force = {x:0.0, y:0.0};
 
 function Projectile(game) {
-
+                            /* Player Weapons */
     // bullets
     bullets = game.add.group();
     weaponType(bullets,'bullets','pokeball',8,0.5,70,2,500,false,false);
@@ -19,9 +19,9 @@ function Projectile(game) {
     lasers = game.add.group();
     weaponType(lasers,'lasers','greenBeam',10,0.15,35,2,300,false,false);
 
-    // multi bullets
+    // multi (tomato) bullets
     multiBullets = game.add.group();
-    weaponType(multiBullets,'multiBullets','tomato',20,0.1,70,2,500,false,false);
+    weaponType(multiBullets,'multiBullets','tomato',20,0.1,70,2,500,false,true);
 
     // multi lasers
     multiLasers = game.add.group();
@@ -34,11 +34,15 @@ function Projectile(game) {
                             /* Enemy weapons */
     // enemy bullets
     Ebullets = game.add.group();
-    weaponType(bullets,'bullets','pokeball',8,0.5,70,2,500,false,false);
+    weaponType(Ebullets,'Ebullets','pokeball',8,0.5,150,2,500,false,false);
 
     // enemy lasers
     Elasers = game.add.group();
-    weaponType(Ebullets,'lasers','greenBeam',10,0.15,150,2,300,false,false);
+    weaponType(Elasers,'Elasers','greenBeam',10,0.4,10,20,300,false,false);
+
+    // enemy bombs
+    Ebombs = game.add.group();
+    weaponType(Ebombs,'Ebombs','aBomb',80,1,3000,300,300,false,true);
 }
 
 function weaponType(group,name,img,size,prop,rate,pwr,speed,homing,explosive) {
@@ -75,7 +79,8 @@ function weaponCollisionsUpdate() {
 
     // enemy weapons
     weaponCollisions(Ebullets);
-    weaponCollisions(Elasers);    
+    weaponCollisions(Elasers);
+    weaponCollisions(Ebombs);
 }
 
 // ends projectiles if they touch the walls
@@ -111,7 +116,6 @@ function singleFire(group) {
         round.reset(player.x, player.y - 20);
         game.physics.arcade.moveToPointer(round,group.speed);
     }
-
 }
 
 // MULTI-FIRE
@@ -158,6 +162,7 @@ function setFirePos(round) {
     firePos++;
 }
 
+// special fire function for the nuke
 function nukeFire(group) {
 
     // create sprite and define boundary properties
@@ -215,27 +220,33 @@ function accelerateToObject(obj1, obj2, speed) {
 //  2. runs an explosion sequence
 function endProjectile(object) {
 
-    // non-explosives die
-    if (object.parent.explosive === false) {
-        object.destroy();
-    } 
-
-    // explosives EXPLODE
-    else {
+    // Explosives explode
+    if (object.parent.explosive) {
 
         var explosion;
 
-        if (object.parent.name === 'nukes') {
-            explosion=this.game.add.sprite(object.x-80,object.y-80,'explosion');
-            explosion.scale.setTo(3,3);
-        } else {
-            explosion=this.game.add.sprite(object.x-20,object.y-20,'explosion');
+        // multi bullets/tomatoes
+        if (object.parent.name === 'multiBullets') {
+            explosion=this.game.add.sprite(object.x-80,object.y-80,'tomatoExplosion');
+            explosion.scale.setTo(0.75,0.75);
+            explosion.killOnComplete = true;
+            explosion.animations.add('tomatoExplosion', [0,1,2,3,4,5,6,7,8,9,10,11,12], 12, false);
+            explosion.animations.play('tomatoExplosion',30,false,true);
         }
 
-        explosion.killOnComplete = true;
-        object.destroy();
-        explosion.animations.add('explosion', [0,1,2,3,4,5,6,7,8,9], 10, false);
-        explosion.animations.play('explosion',30,false,true);
-    }
-}
+        // nukes, rockets, and enemy bombs (Ebombs)
+        else {
 
+            if (object.parent.name === 'nukes' || object.parent.name === 'Ebombs') {
+                explosion=this.game.add.sprite(object.x-80,object.y-80,'explosion');
+                explosion.scale.setTo(3,3);
+            } else {
+                explosion=this.game.add.sprite(object.x-20,object.y-20,'explosion');
+            }
+            explosion.killOnComplete = true;
+            explosion.animations.add('explosion', [0,1,2,3,4,5,6,7,8,9], 10, false);
+            explosion.animations.play('explosion',30,false,true);
+        }
+    }
+    object.destroy();
+}

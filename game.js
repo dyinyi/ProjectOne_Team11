@@ -1,14 +1,17 @@
 var game = new Phaser.Game(1000, 600, Phaser.AUTO, "game", 
         {preload:preload, update:update, create:create});
 
-
 var wasd;
 var walls;
 var wall;
+var blocks;
+var block;
 var keys;
-var doors;
+var firstDoors;
+var secondDoors;
 var hasKey = 0;
 var lava;
+var lavas;
 var enemyGroup;
 var bitcoinGroup;
 var menu;
@@ -23,65 +26,76 @@ var pauseInput;
 
 // text related globals
 var coinText;
-
-
+var coinString;
 
 function preload () {
-	game.load.image('background','level_elements/CircuitBoard.jpg');
-    game.load.image('wall', 'level_elements/wall.jpg');
+	game.load.image('background','images/xp.jpg');
+	game.load.image('sandbrick','images/sandBrick.png');
+	game.load.spritesheet('lava', 'images/lava.png');
+    game.load.image('wall', 'images/wall.jpg');
         // http://i.ytimg.com/vi/fdJrQMvLHSM/hqdefault.jpg
-    game.load.image('XP', 'level_elements/windowsXP.jpg');
+    game.load.image('XP', 'images/windowsXP.jpg');
         //www.hdwallpapers.in
-    game.load.image('key', 'level_elements/endKey.png');
-    game.load.image('door', 'level_elements/stone.png');
-    game.load.image('lava', 'level_elements/lava.png');
-    game.load.image('endDoor', 'level_elements/door.jpg');
-    game.load.image('space', 'level_elements/Deep-Space.jpg');
-    game.load.image('speedship','ship_sprites/speedship.png'); // enemy 1
-        // (from ship sprite pack)
-    game.load.image('elShip','ship_sprites/elShip.png'); // enemy 2
+    game.load.image('key', 'images/usb.png');
+    game.load.image('door', 'images/stone.png');
+    game.load.image('firstDoor', 'images/door.jpg');
+    game.load.image('space', 'images/Deep-Space.jpg');
+    
+    // from ship sprite pack
+    game.load.image('speedship','ship_sprites/speedship.png');
+    game.load.image('heavyship','ship_sprites/heavyfreighter.png');
+    game.load.image('elShip','ship_sprites/elShip.png');
+
+    game.load.image('turrett','ship_sprites/medfrighter.png');
         // cliparts.co (from Spaceship concept art for ELYSIUM by Ben Mauro)
-    game.load.image('player1','player_vehicles/basicCar.png'); // player 1
+    game.load.image('player1','images/basicCar.png'); // player 1
         // http://www.xnadevelopment.com/sprites/images/Car.png
     game.load.image('player2','ship_sprites/medfighter.png');  // player 2
         // (from ship sprite pack)
-    game.load.image('coin','level_elements/bitcoin.png');
+    game.load.image('coin','images/bitcoin.png');
+    game.load.image('enemy_bullet','images/bullet_2.png');
         // digitalmoneytimes.com
-    game.load.image('pokeball','weapons/pokeball.png');
+    game.load.image('pokeball','images/pokeball.png');
         // http://creepypasta81691.deviantart.com/art/Pokeball-Sprite-295593219
-    game.load.image('tomato','weapons/Tomato-Sprite.png');
+    game.load.image('tomato','images/Tomato-Sprite.png');
         // http://img4.wikia.nocookie.net/__cb20140326231144/
         //                  herebemonsters/images/b/b7/Tomato-Sprite.png
-    game.load.image('bomb','weapons/bomb.png'); 
+    game.load.image('bomb','images/bomb.png'); 
         // http://www.zeldaelements.net/images/games/
         //              the_minish_cap/items_and_equipment/bombs.png
-    game.load.spritesheet('explosion','weapons/explosion.png',60,60);
+    game.load.spritesheet('explosion','images/explosion.png',60,60);
         // korzonrocknet.deviantart.com
-    game.load.image('bluBall','weapons/blueBall.png');
+    game.load.spritesheet('tomatoExplosion','images/tomato_explosion.png',222,222);
+        //
+    game.load.image('bluBall','images/blueBall.png');
         // http://www.zeldadungeon.net/wiki/images/a/a9/Ball-1.png
-    game.load.image('greenBeam','weapons/laser.png'); 
+    game.load.image('greenBeam','images/laser.png'); 
         //https://qph.is.quoracdn.net/main-qimg-
         //             826a2483ab9104e55abf64f8ddaf2251?convert_to_webp=true
-    game.load.image('nuke','weapons/nuke.png'); 
+    game.load.image('nuke','images/nuke.png'); 
         // bay12forums.com user "Shook"
+    game.load.image('aBomb','images/A-Bomb_Mk_2.gif');
+        // A-bomb by Ironcommando
 
-    game.load.image('menu','menu.png');
+    game.load.image('menu','images/menu.png');
     game.load.json('difficulty', 'settings.json'); // loading JSON
 
     // barrel sprite posted on http://opengameart.org/ by user truezipp
-    game.load.image('blueBall_barrel','caches/blueBall_barrel.png');
-    game.load.image('bomb_barrel','caches/bomb_barrel.png');
-    game.load.image('laser_barrel','caches/laser_barrel.png');
-    game.load.image('poke_barrel','caches/poke_barrel.png');
-    game.load.image('tomato_barrel','caches/tomato_barrel.png');
-    game.load.image('nuke_barrel','caches/nuke_barrel.png');
+    game.load.image('blueBall_barrel','images/blueBall_barrel.png');
+    game.load.image('bomb_barrel','images/bomb_barrel.png');
+    game.load.image('laser_barrel','images/laser_barrel.png');
+    game.load.image('poke_barrel','images/poke_barrel.png');
+    game.load.image('tomato_barrel','images/tomato_barrel.png');
+    game.load.image('nuke_barrel','images/nuke_barrel.png');
 
 }
 
 function create() {
 
+    // physics and background
 	game.physics.startSystem(Phaser.Physics.ARCADE);
-	game.add.tileSprite(0, 0, 1920, 1920, 'XP');
+	var background = game.add.tileSprite(0, 0, 2640, 1920, 'background');
+	background.tileScale.setTo(1.375,1.6);
 
     // pause menu input
     pauseInput = game.input.keyboard.addKey(Phaser.Keyboard.P);
@@ -94,66 +108,56 @@ function create() {
     baseFR = settingsJSON.baseFR;
 
     // game bounds
-    game.world.setBounds(0, 0, 1920, 1920);
+    game.world.setBounds(0, 0, 2640, 1920);
 
     // walls
 	walls = game.add.group();
 	walls.enableBody = true;
 	drawWalls();
 
+	// blocks
+	blocks = game.add.group();
+	blocks.enableBody = true;
+	drawBlocks();
+	
     // lava
-    this.lavas = this.add.physicsGroup();
+    game.lavas = game.add.physicsGroup();
     addLavas();
+
+    // weapon groups
+    projectiles = new Projectile(game);
 	
     // player
 	setSkin(1);
-	player = new Player(game, 70, 1550, P_skin);
+	player = new Player(game, 100, 100, P_skin);
 	player.enableBody = true;
 	player.body.collideWorldBounds = true;
 	
     // enemies
-	enemyGroup = game.add.group();
+    addEnemies();
     
-    enemy1 = new Enemy(game, 300, 1850, enemyType1);
-    enemy2 = new Enemy(game, 400, 1500, enemyType1);
-    enemy3 = new Enemy(game, 650, 1700, enemyType1);
-    enemy4 = new Enemy(game, 900, 1800, enemyType1);
-    enemy5 = new Enemy(game, 900, 1500, enemyType1);
-    enemy6 = new Enemy(game, 900, 1880, enemyType1);
-    enemy7 = new Enemy(game, 650, 1500, enemyType1);
-    enemy8 = new Enemy(game, 1000, 700, enemyType1);
-    enemy9 = new Enemy(game, 600, 900, enemyType1);
-    enemy10 = new Enemy(game, 600, 100, enemyType1);
-    enemy12 = new Enemy(game, 1000, 400, enemyType1);
-    enemy13 = new Enemy(game, 1300, 100, enemyType1);
-    enemy14 = new Enemy(game, 1500, 500, enemyType1);
-    enemy15 = new Enemy(game, 50, 800, enemyType1);
-    enemy16 = new Enemy(game, 500, 500, enemyType1);
-    enemy17 = new Enemy(game, 1600, 1700, enemyType1);
-    enemy18 = new Enemy(game, 1500, 1600, enemyType1);
-
-    enemyType2 = setEnemyType(50,40,'elShip',100,20,250,0.5,100,100);
-    enemy11 = new Enemy(game, 1500, 1700, enemyType2);
-
     // bitcoins and bitcoin total tracking
     bitcoinGroup = game.add.group();
     coinString = 'Bitcoins: ';
-    coinText = game.add.text(10, 10, coinString + player.cash, { font: '34px Arial', fill: '#fff' });
+    coinText = game.add.text(10, 10, coinString + player.cash, 
+                        { font: '34px Arial', fill: 'red' });
     coinText.fixedToCamera = true;
-    coinText.cameraOffset.setTo(40,20);
+    coinText.cameraOffset.setTo(750,60);
 
     // health bar
     healthString = 'Health: ';
-    healthText = game.add.text(10, 10, healthString + player.health, { font: '34px Arial', fill: '#fff' });
+    healthText = game.add.text(10, 10, healthString + player.health, 
+                            { font: '34px Arial', fill: 'green' });
     healthText.fixedToCamera = true;
     healthText.cameraOffset.setTo(750,20);
-   
-    // weapon groups
-    projectiles = new Projectile(game);
 
     // doors and keys    
-    setupDoor();
-    endDoor();
+    firstDoor();
+    secondDoors = game.add.group();
+	secondDoors.enableBody = true;
+	secondDoor = secondDoors.create(15, 940, 'door');
+	secondDoor.body.immovable = true;
+	secondDoor.scale.setTo(2.0, 1.0);
     setupKey();
 
     // put the weapons caches in the game
@@ -162,7 +166,6 @@ function create() {
 }
 
 function update() {
-
     // HUD
     coinText.text = coinString + player.cash;
     healthText.text = healthString + player.health;
@@ -178,30 +181,40 @@ function update() {
     weaponCollisionsUpdate();
     game.physics.arcade.collide(player, walls);
     game.physics.arcade.collide(enemyGroup,walls);
+    game.physics.arcade.collide(enemyGroup,firstDoors);
+    game.physics.arcade.collide(player, blocks);
+    game.physics.arcade.collide(block, walls);
 
     // lava/player collisions
+    /*
     game.physics.arcade.overlap(lava, player, killPlayer, null, this);
     game.physics.arcade.overlap(lava2, player, killPlayer, null, this);
     game.physics.arcade.overlap(lava3, player, killPlayer, null, this);
-
+    game.physics.arcade.overlap(lava4, player, killPlayer, null, this);
+    game.physics.arcade.overlap(lava5, player, killPlayer, null, this);
+    game.physics.arcade.overlap(lava6, player, killPlayer, null, this);
+    game.physics.arcade.overlap(lava7, player, killPlayer, null, this);
+*/
     // player/misc. collisions
-    game.physics.arcade.collide(player, doors, openDoor, null, this);
+    game.physics.arcade.collide(player, firstDoors, openDoor, null, this);
     game.physics.arcade.overlap(player, keys, collectKey, null, this);
-    game.physics.arcade.collide(player, endDoors, openEndDoor, null, this);
+    game.physics.arcade.collide(player, secondDoors);
 
     // handles door durability
     if (killCount == 7) {
-    	door.destroy();
+    	secondDoor.destroy();
     }
-
+    if (killCount == 16) {
+    	game.add.text(player.x, player.y, "YOU WON!",
+    		{ font: "30px Arial", fill: "#fff", align: "center" });
+		game.time.events.add(Phaser.Timer.SECOND * 3, restart, this);
+    }
     // homing weapons
     if (enemyGroup.length > 0) {
         rockets.forEachAlive(pickTarget,rockets);
         nukes.forEachAlive(pickTarget,nukes);
     }
-
 }
-
 
 function render() {
 	game.debug.body(wall);

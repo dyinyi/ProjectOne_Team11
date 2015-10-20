@@ -1,7 +1,7 @@
 // wall.js
 
 function Wall(x, y, w, h) {
-    wall = game.add.tileSprite(x, y, w, h, 'wall');
+    wall =	game.add.tileSprite(x, y, w, h, 'wall');
     game.physics.arcade.enable(wall, Phaser.Physics.ARCADE);
     wall.body.collideWorldBounds = true;
     walls.add(wall);
@@ -9,15 +9,31 @@ function Wall(x, y, w, h) {
 }
 
 function drawWalls() {
-	Wall(0, 1470, 258, 32);
-	Wall(258, 1470, 32, 320);
-	Wall(258, 1790, 64, 32);
-	Wall(320, 1278, 32, 544);
-	Wall(320, 1278, 640, 32);
-	Wall(960, 1278, 32, 544);
-	Wall(1088, 642, 32, 1280);
-	Wall(130, 642, 960, 32);
-	Wall(130, 546 , 32, 96);
-	Wall(130, 546, 1184, 32);
-	Wall(1314, 546, 32, 1408);
+	Wall(0,320,2240,32);
+	Wall(2240,320,32,480);
+	Wall(160,960,2480,32);
+	Wall(320,960,32,576);
+	Wall(320,1536,256,32);
+	Wall(640,1536,32,288);
+	Wall(960,1280,32,448);
+	Wall(960,1824,32,96);
+	Wall(480,1280,480,32);
+	Wall(1440,992,32,832);
+	Wall(1280,352,32,512);
+	Wall(320,1568,32,256);
+	Wall(672,1600,288,32);
+	Wall(352,1792,288,32);
+}
+
+function Block(x, y, w, h) {
+    block =	game.add.tileSprite(x, y, w, h, 'sandbrick');
+    game.physics.arcade.enable(block, Phaser.Physics.ARCADE);
+    block.body.collideWorldBounds = true;
+    blocks.add(block);
+	block.body.immovable = false;
+	block.body.checkCollision.left = false;
+}
+
+function drawBlocks() {   
+	Block(640,1888,320,96);
 }

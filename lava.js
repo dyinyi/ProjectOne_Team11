@@ -41,32 +41,68 @@ Lava.prototype.stop = function () {
 };
 
 function addLavas() {
-    lava = new Lava(game, 400, 990, 'lava', this.lavas);
+    lava = new Lava(game, 0, 1248, 'lava', this.lavas);
     lava.body.collideWorldBounds = true;
-    lava.scale.set(1, 10);
+    lava.scale.set(1, 1);
     lava.addMotionPath([
-    		{ x: "0", xSpeed: 2000, xEase: "Linear", y: "-350", ySpeed: 500, yEase: "Sine.easeOut" },
-            { x: "0", xSpeed: 2000, xEase: "Linear", y: "+350", ySpeed: 500, yEase: "Sine.easeIn" }
+    		{ x: "+320", xSpeed: 1000, xEase: "Linear", y: "0", ySpeed: 0, yEase: "Linear" },
+            { x: "-320", xSpeed: 500, xEase: "Linear", y: "0", ySpeed: 0, yEase: "Linear" }
     ]);
     lava.start();
     
-    lava2 = new Lava(game, 800, 640, 'lava', this.lavas);
+    lava2 = new Lava(game, 288, 1536, 'lava', this.lavas);
     lava2.body.collideWorldBounds = true;
-    lava2.scale.set(1, 10);
+    lava2.scale.set(1, 1);
     lava2.addMotionPath([
-    		{ x: "0", xSpeed: 2000, xEase: "Linear", y: "+350", ySpeed: 500, yEase: "Sine.easeOut" },
-            { x: "0", xSpeed: 2000, xEase: "Linear", y: "-350", ySpeed: 500, yEase: "Sine.easeIn" }
+    		{ x: "-320", xSpeed: 500, xEase: "Linear", y: "0", ySpeed: 0, yEase: "Linear" },
+            { x: "+320", xSpeed: 1000, xEase: "Linear", y: "0", ySpeed: 0, yEase: "Linear" }
     ]);
     lava2.start();
     
-    lava3 = new Lava(game, 600, 440, 'lava', this.lavas);
+    lava3 = new Lava(game, 700, 270, 'lava', this.lavas);
     lava3.body.collideWorldBounds = true;
     lava3.scale.set(2, 2);
     lava3.addMotionPath([
-    		{ x: "+350", xSpeed: 2000, xEase: "Linear", y: "-350", ySpeed: 1000, yEase: "Sine.easeOut" },
-            { x: "-350", xSpeed: 2000, xEase: "Linear", y: "+350", ySpeed: 1000, yEase: "Sine.easeOut" },
-            { x: "-350", xSpeed: 2000, xEase: "Linear", y: "-350", ySpeed: 1000, yEase: "Sine.easeIn" },
-            { x: "+350", xSpeed: 2000, xEase: "Linear", y: "+350", ySpeed: 1000, yEase: "Sine.easeIn" }
+    		{ x: "+270", xSpeed: 2000, xEase: "Linear", y: "-270", ySpeed: 1000, yEase: "Linear" },
+            { x: "-270", xSpeed: 2000, xEase: "Linear", y: "+270", ySpeed: 1000, yEase: "Linear" }
     ]);
     lava3.start();
+    
+    lava4 = new Lava(game, 960, 0, 'lava', this.lavas);
+    lava4.body.collideWorldBounds = true;
+    lava4.scale.set(2, 2);
+    lava4.addMotionPath([
+    		{ x: "-270", xSpeed: 2000, xEase: "Linear", y: "+270", ySpeed: 1000, yEase: "Linear" },
+            { x: "+270", xSpeed: 2000, xEase: "Linear", y: "-270", ySpeed: 1000, yEase: "Linear" }
+    ]);
+    lava4.start();
+    
+    lava5 = new Lava(game, 1480, 270, 'lava', this.lavas);
+    lava5.body.collideWorldBounds = true;
+    lava5.scale.set(2, 2);
+    lava5.addMotionPath([
+    		{ x: "+270", xSpeed: 2000, xEase: "Linear", y: "-270", ySpeed: 1000, yEase: "Linear" },
+            { x: "-270", xSpeed: 2000, xEase: "Linear", y: "+270", ySpeed: 1000, yEase: "Linear" }
+    ]);
+    lava5.start();
+    
+    lava6 = new Lava(game, 1740, 0, 'lava', this.lavas);
+    lava6.body.collideWorldBounds = true;
+    lava6.scale.set(2, 2);
+    lava6.addMotionPath([
+    		{ x: "-270", xSpeed: 2000, xEase: "Linear", y: "+270", ySpeed: 1000, yEase: "Linear" },
+            { x: "+270", xSpeed: 2000, xEase: "Linear", y: "-270", ySpeed: 1000, yEase: "Linear" }
+    ]);
+    lava6.start();
+    
+    lava7 = new Lava(game, 448, 1056, 'lava', this.lavas);
+    lava7.body.collideWorldBounds = true;
+    lava7.scale.set(4,2);
+    lava7.addMotionPath([
+    		{ x: "+640", xSpeed: 1000, xEase: "Linear", y: "0", ySpeed: 0, yEase: "Linear" },
+    		{ x: "0", xSpeed: 0, xEase: "Linear", y: "+160", ySpeed: 1000, yEase: "Linear" },
+    		{ x: "-640", xSpeed: 1000, xEase: "Linear", y: "0", ySpeed: 0, yEase: "Linear" },
+    		{ x: "0", xSpeed: 0, xEase: "Linear", y: "-160", ySpeed: 1000, yEase: "Linear" }
+    ]);
+    lava7.start();
 }
