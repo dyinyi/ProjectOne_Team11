@@ -18,6 +18,7 @@ var explosion2FX;
 var explosion3FX;
 var explosion4FX;
 var coinFX;
+var rektFX;
 
 
 function preload() {
@@ -38,6 +39,7 @@ function preload() {
     game.load.audio('explosion3FX', 'audio/explosion3.wav');
     game.load.audio('explosion4FX', 'audio/explosion4.wav');
     game.load.audio('coinFX', 'audio/coin.wav');
+    game.load.audio('rektFX', 'audio/rekt.wav');
 
 
 }
@@ -129,6 +131,19 @@ function weaponFire() {
         }
     }
 }
+
+
+// add rektFX.play();
+function updatePlayer(){
+
+    if (player.health <= 0) {
+        rektFX.play();
+        player.kill();
+        // todo: call end game screen function
+    }
+
+}
+
 
 //in enemy.js
 
