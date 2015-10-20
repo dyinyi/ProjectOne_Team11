@@ -8,6 +8,8 @@ function setupKey() {
 }
 
 function changeBackground() {
+	startScene.stop();
+	bossScene.play();
 	background.kill();
 }
 
@@ -27,6 +29,7 @@ function killPlayer() {
 }
 
 function restart() {
+	endScene.stop();
 	game.state.restart();
 	setupKey();
 }
