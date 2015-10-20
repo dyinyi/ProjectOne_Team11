@@ -64,6 +64,7 @@ function create() {
 	explosion3FX = game.add.audio('explosion3FX');
 	explosion4FX = game.add.audio('explosion4FX');
 	coinFX = game.add.audio('coinFX');
+    rektFX = game.add.audio('rektFx');
 
 //when the level starts
 	startScene.play();
@@ -108,7 +109,7 @@ function weaponFire() {
     if (player.alive) {
         if (game.input.activePointer.isDown) {
             if (player.weapon === 'bullets') {
-            	bulletsFx.play();
+            	bulletsFX.play();
                 singleFire(bullets);
             } else if (player.weapon === 'rockets') {
             	rocketsFX.play();
