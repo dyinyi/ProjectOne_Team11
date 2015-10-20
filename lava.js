@@ -22,8 +22,8 @@ Lava.prototype.addMotionPath = function (motionPath) {
     this.tweenY = this.game.add.tween(this.body);
     
     for (var i = 0; i < motionPath.length; i++) {
-    	this.tweenX.to( { x: motionPath[i].x }, motionPath[i].xSpeed, motionPath[i].xEase);
-        this.tweenY.to( { y: motionPath[i].y }, motionPath[i].ySpeed, motionPath[i].yEase);
+    	this.tweenX.to( { x: motionPath[i].x }, motionPath[i].xSpeed*lavaSPD/10, motionPath[i].xEase);
+        this.tweenY.to( { y: motionPath[i].y }, motionPath[i].ySpeed*lavaSPD/10, motionPath[i].yEase);
     }
     
     this.tweenX.loop();

@@ -34,15 +34,15 @@ function Projectile(game) {
                             /* Enemy weapons */
     // enemy bullets
     Ebullets = game.add.group();
-    weaponType(Ebullets,'Ebullets','pokeball',8,0.5,150,2*baseDMG,500,false,false);
+    weaponType(Ebullets,'Ebullets','pokeball',8,0.5,150*baseFR,2*baseDMG,500,false,false);
 
     // enemy lasers
     Elasers = game.add.group();
-    weaponType(Elasers,'Elasers','greenBeam',10,0.4,10,20*baseDMG,600,false,false);
+    weaponType(Elasers,'Elasers','greenBeam',10,0.4,10*baseFR,20*baseDMG,600,false,false);
 
     // enemy bombs
     Ebombs = game.add.group();
-    weaponType(Ebombs,'Ebombs','aBomb',80,1,3000,300*baseDMG,300,false,true);
+    weaponType(Ebombs,'Ebombs','aBomb',80,1,3000*baseFR,300*baseDMG,300,false,true);
 }
 
 function weaponType(group,name,img,size,prop,rate,pwr,speed,homing,explosive) {

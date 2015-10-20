@@ -22,6 +22,7 @@ var baseDMG = 1;
 var baseSPD = 1;
 var baseHP = 1;
 var baseFR = 1;
+var lavaSPD = 10;
 var pauseInput;
 var background;
 var gameEndText;
@@ -156,6 +157,7 @@ function create() {
     baseSPD = settingsJSON.baseSPD;
     baseHP = settingsJSON.baseHP;
     baseFR = settingsJSON.baseFR;
+    lavaSPD = settingsJSON.lavaSPD;
 
     // game bounds
     game.world.setBounds(0, 0, 2640, 1920);

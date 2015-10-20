@@ -37,9 +37,9 @@ function Enemy(game, x, y, E_type) {
 // gives each enemy specific properties
 function setEnemyType(health, name, speed, coin, aggro, scale, sizeX, sizeY, weapon){
     var newE_type = {health:20, name:"N/A", speed:0, coin:0, dmg: 0};
-    newE_type.health = health;
+    newE_type.health = health*baseHP;
     newE_type.name= name;
-    newE_type.speed = speed;
+    newE_type.speed = speed*baseSPD;
     newE_type.coin = coin;
     newE_type.aggro = aggro;
     newE_type.scale = scale;
