@@ -33,36 +33,33 @@ function retrieved(player, barrel) {
 	barrel.kill(); // remove barrel
 
 	var howTo = game.add.text(player.x, player.y - 50, barrel.directions,
-						 { font: "30px Arial", fill: "#fff", align: "center" });
+						 { font: "20px Arial", fill: "red", align: "center" });
 
 	game.time.events.add(Phaser.Timer.SECOND * 3, howTo.kill, howTo);
-	
 }
 
 function addCaches() {
-
 	// bullets/pokeball
 	var directions = "Press the `/~ key\nand click to\nfire bullets";
-	poke_barrel = new Cache(game,128,1565,'poke_barrel',0,directions);
-
+	poke_barrel = new Cache(game,200,200,'poke_barrel',0,directions);
+	
 	// bombs
 	directions = "Press the '1' key\nand click to\nfire homing bombs";
-	bomb_barrel = new Cache(game,1035,1752,'bomb_barrel',1,directions);
+	bomb_barrel = new Cache(game,500,1700,'bomb_barrel',1,directions);
 
-	// laser
+	/*// laser
 	directions = "Press the '2' key\nand click to\nfire the laser";
-	laser_barrel = new Cache(game,184,477,'laser_barrel',2,directions);
+	laser_barrel = new Cache(game,184,477,'laser_barrel',2,directions);*/
 
 	// multi bullets/tomatoes
 	directions = "Press the '3' key\nand click to \nfire tomato bullets";
-	tomato_barrel = new Cache(game,1638,148,'tomato_barrel',3,directions);
+	tomato_barrel = new Cache(game,2400,600,'tomato_barrel',3,directions);
 
-	// multi laser/blueBall
+	/*// multi laser/blueBall
 	directions = "Press the '4' key\nand click to \nfire the ultra laser";
 	blueBall_barrel = new Cache(game,1701,1408,'blueBall_barrel',4,directions);
 
 	// nuke
 	directions = "Press SPACEBAR to \nfire a nuke";
-	nuke_barrel = new Cache(game,128,1765,'nuke_barrel',5,directions);
-
+	nuke_barrel = new Cache(game,128,1765,'nuke_barrel',5,directions);*/
 }

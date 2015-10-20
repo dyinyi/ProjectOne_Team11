@@ -8,16 +8,10 @@ var arsenal;
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
-
-//Player.prototype.enemyVsPlayer = enemyVsPlayer;
-//Player.prototype.projectilesVsPlayer = projectilesVsPlayer;
-//Player.prototype.deploy = deploy;
-//Player.prototype.setWeapon = setWeapon;
-
 Player.prototype.setSkin = setSkin;
 
 function Player(game, x, y, P_skin) { //, P_weapon) {
-	
+    
     Phaser.Sprite.call(this, game, x, y, P_skin.name);
     
     this.scale.setTo(0.1,0.1);
@@ -39,11 +33,6 @@ function Player(game, x, y, P_skin) { //, P_weapon) {
         right: game.input.keyboard.addKey(Phaser.Keyboard.D),
     };
 
-    specials = {
-        special1: game.input.keyboard.addKey(Phaser.Keyboard.Q),
-        special2: game.input.keyboard.addKey(Phaser.Keyboard.E)
-    };
-
     arsenal = {
         bullets: game.input.keyboard.addKey(Phaser.Keyboard.TILDE),
         rockets: game.input.keyboard.addKey(Phaser.Keyboard.ONE),
@@ -55,27 +44,21 @@ function Player(game, x, y, P_skin) { //, P_weapon) {
 
     this.weapon;
     this.cash = 0;
-    this.weaponsCaches = setCaches();
+
+    // Weapon cache values: bullets:0, rockets:1, laser:2,
+    //             multi bullets:3, multi laser:4, nukes:5
+    this.weaponsCaches = [false, false, false, false, false];
 
 }
 
-// Weapon values: bullets:0, rockets:1, laser:2, multi bullets:3,
-//                multi laser:4, nukes:5
-function setCaches() {
-
-    array = [false, false, false, false, false];
-    return array;
-
-}
-
-
+// allows different player types
 function setSkin(skinType) {
 
     if (skinType == 1) {
-        P_skin.health = 150;
+        P_skin.health = 15000;
         P_skin.type = 1;
         P_skin.name = 'player1';
-        P_skin.speed = 4.5;
+        P_skin.speed = 10;
     }
 
     else {
@@ -87,66 +70,43 @@ function setSkin(skinType) {
 
 }
 
+function updatePlayer(){
 
-function useSpecial1() {
-    if (P_skin.type == 1) {
-        //cooldown = new Timer(game);
-        
-        player.x -= 5*P_skin.speed; //no .body for now
-        // todo: call drifting/teleport animation function
-    }
-    if (P_skin.type == 2) {
-        player.health += 5;
-        // todo: call heal animation function as well
+    if (player.health <= 0) {
+        player.kill();
+        game.add.text(player.x, player.y, "GAME OVER",
+            { font: "30px Arial", fill: "#fff", align: "center" });
+        game.time.events.add(Phaser.Timer.SECOND * 3, restart, this);
     }
 
+    game.camera.follow(player);
+
+    // moves player
+    movePlayer(player);
+
+    // damage to player from enemies and enemy fire
+    game.physics.arcade.overlap(enemyGroup, player, enemyVsPlayer, null, this);
+    game.physics.arcade.overlap(Ebullets, player, EweaponsVsPlayer, null, this);
+    game.physics.arcade.overlap(Elasers, player, EweaponsVsPlayer, null, this);
+    game.physics.arcade.overlap(Ebombs, player, EweaponsVsPlayer, null, this);
+
+
+    // player weapon selection and fire
+    weaponChoice();
+    weaponFire();
 }
 
-function useSpecial2(game) {
-    if (P_skin.type == 1) {
-        player.x += 5*P_skin.speed; //no .body for now
-        // todo: call drifting/teleport animation function
-    }
-    if (P_skin.type == 2) {
-        // todo: use weapon of massive destruction   
-    }
-}
+// enemy weapon/player interaction
+function EweaponsVsPlayer(player,Eweapon) {
 
-function EbulletsVsPlayer(){
-    console.log(player.health);
-    player.damage(Ebullets.power);
-    //Ebullets.kill();
+    player.damage(Eweapon.parent.power); // damage player
+
+    endProjectile(Eweapon); // destroy projectile
 }
 
 
 function enemyVsPlayer(){
     player.health -= 5;
-}
-
-
-function updatePlayer(){
-
-    if (player.health <= 0) {
-        player.kill();
-        // todo: call end game screen function
-    }
-
-    game.camera.follow(player);
-
-    //game.physics.arcade.overlap(enemyProjectiles, player, damaging, null, this);
-
-    // moves player
-    movePlayer(player);
-
-    // damage to player from enemies
-    game.physics.arcade.overlap(enemyGroup, player, enemyVsPlayer, null, this);
-    game.physics.arcade.overlap(Ebullets, player, EbulletsVsPlayer, null, this);
-
-    // player weapon selection and fire
-    weaponChoice();
-    weaponFire();
-
-    // when player finds a new weapon
 }
 
 // player movements
@@ -212,4 +172,3 @@ function weaponFire() {
         }
     }
 }
-

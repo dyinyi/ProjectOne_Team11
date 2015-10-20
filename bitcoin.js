@@ -21,9 +21,9 @@ function Bitcoin(game, x, y, value) {
 function pickUpCoin() {
 	player.cash += this.value;
 	this.destroy();
+	player.health += 10;
 }
 
 Bitcoin.prototype.update = function() {
 	game.physics.arcade.overlap(this, player, Bitcoin.prototype.pickupcoin, null, this);
 }
-
