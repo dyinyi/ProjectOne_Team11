@@ -129,7 +129,6 @@ function dropCoin() {
 // ENEMY PROJECTILE IMPLEMENTATION
 var nextEnemyFire = 0;
 
-//Enemy.prototype.enemyFire = function(group) {
 function enemyFire(group,enemy) {
 
     console.log(enemy);

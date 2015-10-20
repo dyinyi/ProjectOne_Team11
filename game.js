@@ -23,12 +23,14 @@ var baseSPD = 1;
 var baseHP = 1;
 var baseFR = 1;
 var pauseInput;
+var background;
 
 // text related globals
 var coinText;
 var coinString;
 
 function preload () {
+    game.load.image('background2','images/space_mac.png');
     game.load.image('background','images/xp.jpg');
     game.load.image('sandbrick','images/sandBrick.png');
     game.load.spritesheet('lava', 'images/lava.png');
@@ -38,7 +40,8 @@ function preload () {
         //www.hdwallpapers.in
     game.load.image('key', 'images/usb.png');
     game.load.image('door', 'images/stone.png');
-    game.load.image('firstDoor', 'images/door.jpg');
+    game.load.image('downloadDoor','images/download.png');
+    game.load.image('firstDoor', 'images/tower.png');
     game.load.image('space', 'images/Deep-Space.jpg');
     
     // from ship sprite pack
@@ -75,7 +78,7 @@ function preload () {
     game.load.image('nuke','images/nuke.png'); 
         // bay12forums.com user "Shook"
     game.load.image('aBomb','images/A-Bomb_Mk_2.gif');
-        // A-bomb by Ironcommando
+        // A-bomb by Ironcommando   
 
     game.load.image('menu','images/menu.png');
     game.load.json('difficulty', 'settings.json'); // loading JSON
@@ -92,9 +95,11 @@ function preload () {
 
 function create() {
 
-    // physics and background
+    // physics and backgrounds
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    var background = game.add.tileSprite(0, 0, 2640, 1920, 'background');
+    background2 = game.add.tileSprite(1470, 990, 2640, 1920, 'background2');
+    background2.tileScale.setTo(1.2,1.5);
+    background = game.add.tileSprite(0, 0, 2640, 1920, 'background');
     background.tileScale.setTo(1.375,1.6);
 
     // pause menu input
@@ -159,6 +164,7 @@ function create() {
     secondDoor.body.immovable = true;
     secondDoor.scale.setTo(2.0, 1.0);
     setupKey();
+    downloadDoor();
 
     // put the weapons caches in the game
     addCaches();
@@ -199,6 +205,7 @@ function update() {
     game.physics.arcade.collide(player, firstDoors, openDoor, null, this);
     game.physics.arcade.overlap(player, keys, collectKey, null, this);
     game.physics.arcade.collide(player, secondDoors);
+    game.physics.arcade.overlap(player,downloadDoors,changeBackground,null,this);
 
     // handles door durability
     if (killCount == 7) {
