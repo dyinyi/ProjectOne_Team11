@@ -33,11 +33,11 @@ function preload() {
     game.load.audio('multiLasersFX', 'audio/multiLasers.wav');
  // game.load.audio('multiLasersFX', 'audio/multiLasers_b.wav');
     game.load.audio('hitFX', 'audio/hit.wav');
-    game.load.audio('explosion1FX', 'audio/explosion1');
-    game.load.audio('explosion2FX', 'audio/explosion2');
-    game.load.audio('explosion3FX', 'audio/explosion3');
-    game.load.audio('explosion4FX', 'audio/explosion4');
-    game.load.audio('coinFX', 'audio/coin');
+    game.load.audio('explosion1FX', 'audio/explosion1.wav');
+    game.load.audio('explosion2FX', 'audio/explosion2.wav');
+    game.load.audio('explosion3FX', 'audio/explosion3.wav');
+    game.load.audio('explosion4FX', 'audio/explosion4.wav');
+    game.load.audio('coinFX', 'audio/coin.wav');
 
 
 }
